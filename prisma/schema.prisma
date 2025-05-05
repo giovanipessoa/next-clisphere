@@ -1,0 +1,61 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  email           String
+  phone           String?
+  status          String    // Enum values: "New Lead", "In Treatment", "Loyal", "Active", "Inactive"
+  details         Json?     // Contains: address, city, state, zipCode, country, notes
+  professionalInfo Json?    // Contains: company, jobTitle, leadSource
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  lastContact     DateTime?
+  events          Event[]
+
+  @@map("clients")
+}
+
+model Service {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    name        String
+    description String?
+    category    String
+    basePrice   Float
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    events      Event[]
+
+    @@map("services")
+}
+
+model Event {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    title       String
+    description String?
+    type        String
+    status      String
+    startDate   DateTime
+    endDate     DateTime
+    location    String?
+    notes       String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    // Relacionamentos
+    clientId    String?  @db.ObjectId
+    client      Client?  @relation(fields: [clientId], references: [id])
+    serviceId   String?  @db.ObjectId
+    service     Service? @relation(fields: [serviceId], references: [id])
+
+    @@map("events")
+}

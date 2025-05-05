@@ -1,0 +1,211 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definir as variáveis CSS para temas claro e escuro */
+:root {
+  /* Paleta Principal - Azul Elétrico */
+  --primary: 37, 99, 235;
+  /* Azul elétrico */
+  --primary-hover: 29, 78, 216;
+  --primary-light: 96, 165, 250;
+  --background: 255, 255, 255;
+  --surface: 249, 250, 251;
+  --surface-hover: 243, 244, 246;
+  --border: 229, 231, 235;
+  --text: 17, 24, 39;
+  --text-secondary: 107, 114, 128;
+  --accent: 245, 158, 11;
+  /* Laranja para destaque */
+
+  /* Paleta Premium - Dourado */
+  --premium: 234, 179, 8;
+  /* Dourado */
+  --premium-hover: 202, 138, 4;
+  --premium-light: 250, 204, 21;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: 59, 130, 246;
+    /* Azul elétrico mais brilhante no modo escuro */
+    --primary-hover: 96, 165, 250;
+    --primary-light: 37, 99, 235;
+    --background: 17, 24, 39;
+    /* Cinza escuro */
+    --surface: 31, 41, 55;
+    --surface-hover: 55, 65, 81;
+    --border: 55, 65, 81;
+    --text: 243, 244, 246;
+    --text-secondary: 156, 163, 175;
+    --accent: 245, 158, 11;
+    /* Mesmo laranja para destaque */
+
+    /* Paleta Premium - Dourado para modo escuro */
+    --premium: 250, 204, 21;
+    /* Dourado mais brilhante */
+    --premium-hover: 234, 179, 8;
+    --premium-light: 253, 224, 71;
+  }
+}
+
+/* Aplicação de cores e estilos básicos */
+body {
+  color: rgb(var(--text));
+  background-color: rgb(var(--background));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* Tipografia para foco na leitura rápida */
+@layer base {
+  h1 {
+    @apply text-2xl font-bold tracking-tight md:text-3xl;
+  }
+
+  h2 {
+    @apply text-xl font-bold tracking-tight md:text-2xl;
+  }
+
+  h3 {
+    @apply text-lg font-medium tracking-tight md:text-xl;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+}
+
+/* Animações suaves */
+@layer utilities {
+  .transition-all-200 {
+    transition: all 0.2s ease-in-out;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-200;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    @apply shadow-md;
+  }
+
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-[rgb(var(--primary))/20] focus:ring-offset-2 dark:focus:ring-offset-0;
+  }
+}
+
+/* Componentes no estilo Superhuman */
+@layer components {
+
+  /* Botões */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-md bg-[rgb(var(--primary))] px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-[rgb(var(--primary-hover))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--primary))] focus:ring-offset-2 dark:focus:ring-offset-[rgb(var(--background))];
+  }
+
+  .btn-premium {
+    @apply inline-flex items-center justify-center rounded-md bg-[rgb(var(--premium))] px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-[rgb(var(--premium-hover))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--premium))] focus:ring-offset-2 dark:focus:ring-offset-[rgb(var(--background))];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-md border border-[rgb(var(--border))] bg-transparent px-4 py-2 text-sm font-medium text-[rgb(var(--text))] shadow-sm transition-all hover:bg-[rgb(var(--surface-hover))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--primary))] focus:ring-offset-2 dark:focus:ring-offset-[rgb(var(--background))];
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-[rgb(var(--text-secondary))] transition-all hover:bg-[rgb(var(--surface-hover))] hover:text-[rgb(var(--text))];
+  }
+
+  /* Cards */
+  .card {
+    @apply rounded-xl border border-[rgb(var(--border))] bg-white p-6 shadow-sm transition-all hover-lift dark:bg-[rgb(var(--surface))];
+  }
+
+  .card-premium {
+    @apply rounded-xl border border-[rgb(var(--premium))/30] bg-white p-6 shadow-sm transition-all hover:-translate-y-2 hover:shadow-md hover:shadow-[rgb(var(--premium))]/10 dark:bg-[rgb(var(--surface))];
+  }
+
+  /* Command Bar */
+  .command-input {
+    @apply flex w-full items-center rounded-lg border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-4 py-2 text-sm shadow-sm focus-within:border-[rgb(var(--primary))] focus-within:ring-1 focus-within:ring-[rgb(var(--primary))];
+  }
+
+  /* Barra Lateral */
+  .sidebar-item {
+    @apply flex items-center gap-3 rounded-md px-3 py-2 text-[rgb(var(--text-secondary))] transition-all hover:bg-[rgb(var(--surface-hover))] hover:text-[rgb(var(--text))];
+  }
+
+  .sidebar-item.active {
+    @apply bg-[rgb(var(--surface-hover))] text-[rgb(var(--primary))];
+  }
+
+  /* Atalhos de teclado */
+  .keyboard-shortcut {
+    @apply flex h-5 min-w-[1.2rem] items-center justify-center rounded border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-1 text-xs font-medium text-[rgb(var(--text-secondary))];
+  }
+
+  /* Animações */
+  .fade-in {
+    @apply animate-[fadeIn_0.3s_ease-in-out];
+  }
+
+  .slide-up {
+    @apply animate-[slideUp_0.3s_ease-in-out];
+  }
+
+  .slide-down {
+    @apply animate-[slideDown_0.3s_ease-in-out];
+  }
+
+  .pulse {
+    @apply animate-[pulse_2s_ease-in-out_infinite];
+  }
+}
+
+/* Keyframes para animações */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
