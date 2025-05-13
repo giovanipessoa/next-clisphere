@@ -20,13 +20,13 @@ export interface ClientDetails {
     state?: string;
     zipCode?: string;
     country?: string;
+    leadSource?: LeadSource;
     notes?: string;
 }
 
 export interface ClientProfessionalInfo {
     company?: string;
     jobTitle?: string;
-    leadSource?: LeadSource;
 }
 
 export interface Client {
