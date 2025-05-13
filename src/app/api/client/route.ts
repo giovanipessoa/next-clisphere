@@ -9,11 +9,17 @@ export async function POST(request: Request) {
 
         const client = await createClient.execute(clientData);
 
+        console.log(client);
+
         return NextResponse.json(client, { status: 201 });
     } catch (error) {
-        console.error("Error creating client:", error);
         return NextResponse.json(
-            { error: "Failed to create client" },
+            {
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Ocorreu um erro inesperado",
+            },
             { status: 500 }
         );
     }
@@ -26,9 +32,9 @@ export async function GET() {
 
         return Response.json(clients);
     } catch (error) {
-        console.error("Error fetching clients:", error);
+        console.error("Erro ao buscar clientes:", error);
         return Response.json(
-            { error: "Failed to fetch clients" },
+            { error: "Erro ao buscar clientes" },
             { status: 500 }
         );
     }
