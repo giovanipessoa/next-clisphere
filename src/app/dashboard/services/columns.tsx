@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Service } from "@/domain/entities/service";
+import { Service, BillingModel } from "@/domain/entities/service";
 import { Button } from "@/components/ui/superhuman-interface";
 import { formatCurrency } from "@/lib/utils";
 import { Pencil, Trash } from "lucide-react";
@@ -24,10 +24,13 @@ export const columns: ColumnDef<Service>[] = [
         accessorKey: "billingModel",
         header: "Modelo de cobrança",
         cell: ({ row }) => {
-            const models = {
-                FIXED: "Fixo",
-                HOURLY: "Por Hora",
-                MONTHLY_SUBSCRIPTION: "Assinatura Mensal",
+            const models: Record<BillingModel, string> = {
+                [BillingModel.FIXED]: "Fixo",
+                [BillingModel.HOURLY]: "Por Hora",
+                [BillingModel.MONTHLY_SUBSCRIPTION]: "Assinatura Mensal",
+                [BillingModel.PER_SESSION]: "Por Sessão",
+                [BillingModel.PER_PROCEDURE]: "Por Procedimento",
+                [BillingModel.PER_PACKAGE]: "Por Pacote",
             };
             return models[row.original.billingModel];
         },
