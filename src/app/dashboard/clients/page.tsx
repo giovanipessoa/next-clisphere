@@ -19,7 +19,7 @@ import {
     Calendar,
 } from "lucide-react";
 import NewClientDialog from "@/components/clients/new-client-dialog";
-import { Client } from "@/domain/entities/client";
+import { Client, ClientStatus } from "@/domain/entities/client";
 
 export default function ClientsPage() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -181,7 +181,8 @@ export default function ClientsPage() {
                                     <div className="flex items-center">
                                         <div
                                             className={`h-2 w-2 rounded-full ${
-                                                client.status === "Active"
+                                                client.status ===
+                                                ClientStatus.Active
                                                     ? "bg-emerald-500"
                                                     : "bg-neutral-300 dark:bg-neutral-600"
                                             }`}
