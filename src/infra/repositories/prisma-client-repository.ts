@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { ObjectId } from "mongodb";
 import { Client, ClientStatus } from "../../domain/entities/client";
-import { ClientRepository } from "../../domain/repositories/client-repository";
+import { ClientRepository } from "../../domain/repositories/client/client-repository";
 
 export class PrismaClientRepository implements ClientRepository {
     private prisma: PrismaClient;
@@ -39,6 +39,13 @@ export class PrismaClientRepository implements ClientRepository {
     async findById(id: string): Promise<Client | null> {
         const client = await this.prisma.client.findUnique({
             where: { id },
+        });
+        return client ? this.mapToDomainClient(client) : null;
+    }
+
+    async findByEmail(email: string): Promise<Client | null> {
+        const client = await this.prisma.client.findFirst({
+            where: { email },
         });
         return client ? this.mapToDomainClient(client) : null;
     }

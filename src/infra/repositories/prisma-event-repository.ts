@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { ObjectId } from "mongodb";
 import { Event, EventType, EventStatus } from "../../domain/entities/event";
-import { EventRepository } from "../../domain/repositories/event-repository";
+import { EventRepository } from "../../domain/repositories/event/event-repository";
 
 export class PrismaEventRepository implements EventRepository {
     private prisma: PrismaClient;
