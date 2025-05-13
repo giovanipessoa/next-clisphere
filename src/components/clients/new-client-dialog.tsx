@@ -1,22 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-    X,
-    ChevronDown,
-    ChevronUp,
-    PlusCircle,
-    ArrowRight,
-} from "lucide-react";
+import { X, ChevronDown, ArrowRight } from "lucide-react";
 import { Button, Input } from "@/components/ui/superhuman-interface";
 import { cn } from "@/lib/utils";
-import {
-    Client,
-    ClientStatus,
-    ClientDetails,
-    ClientProfessionalInfo,
-    LeadSource,
-} from "@/domain/entities/client";
+import { Client, ClientStatus, LeadSource } from "@/domain/entities/client";
+import { useToast } from "@/components/ui/toast";
 
 interface NewClientDialogProps {
     isOpen: boolean;
@@ -43,20 +32,21 @@ export default function NewClientDialog({
             state: "",
             zipCode: "",
             country: "",
+            leadSource: LeadSource.Other,
             notes: "",
-        } as ClientDetails,
+        },
         professionalInfo: {
             company: "",
             jobTitle: "",
-            leadSource: LeadSource.Other,
-        } as ClientProfessionalInfo,
+        },
         createdAt: new Date(),
         updatedAt: new Date(),
         lastContact: new Date(),
     });
 
+    const { showToast } = useToast();
     const statusOptions = Object.values(ClientStatus);
-    const leadSourceOptions = Object.values(ClientStatus);
+    const leadSourceOptions = Object.values(LeadSource);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -75,23 +65,7 @@ export default function NewClientDialog({
         >
     ) => {
         const { name, value } = e.target;
-
-        // Handle nested fields
-        if (name.includes(".")) {
-            const [parent, child] = name.split(".");
-            setClient((prev) => ({
-                ...prev,
-                [parent]: {
-                    ...((prev[parent as keyof typeof prev] as
-                        | ClientDetails
-                        | ClientProfessionalInfo) || {}),
-                    [child]: value,
-                },
-            }));
-        } else {
-            // Handle direct fields
-            setClient((prev) => ({ ...prev, [name]: value }));
-        }
+        setClient((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -114,17 +88,30 @@ export default function NewClientDialog({
                 body: JSON.stringify(clientData),
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Erro ao criar cliente");
+            const data = await response.json();
+
+            if (!data.success) {
+                showToast({
+                    description: data.message,
+                    variant: "warning",
+                    duration: 5000,
+                });
+
+                return;
             }
 
             const savedClient = await response.json();
             onSave(savedClient);
             onClose();
         } catch (error) {
-            console.error("Erro ao salvar cliente:", error);
-            // TODO: Implementar um sistema de notificação para feedback visual
+            showToast({
+                description:
+                    error instanceof Error
+                        ? error.message
+                        : "Erro ao criar cliente",
+                variant: "error",
+                duration: 5000,
+            });
         }
     };
 
@@ -190,6 +177,7 @@ export default function NewClientDialog({
                                         id="name"
                                         name="name"
                                         value={client.name}
+                                        type="text"
                                         onChange={handleChange}
                                         placeholder="Nome completo"
                                         required
@@ -208,8 +196,8 @@ export default function NewClientDialog({
                                     <Input
                                         id="email"
                                         name="email"
-                                        type="email"
                                         value={client.email}
+                                        type="email"
                                         onChange={handleChange}
                                         placeholder="email@exemplo.com"
                                         required
@@ -228,6 +216,7 @@ export default function NewClientDialog({
                                         id="phone"
                                         name="phone"
                                         value={client.phone}
+                                        type="tel"
                                         onChange={handleChange}
                                         placeholder="(00) 00000-0000"
                                         required
@@ -278,6 +267,7 @@ export default function NewClientDialog({
                                         id="company"
                                         name="professionalInfo.company"
                                         value={client.professionalInfo?.company}
+                                        type="text"
                                         onChange={handleChange}
                                         placeholder="Nome da empresa"
                                     />
@@ -296,6 +286,7 @@ export default function NewClientDialog({
                                         value={
                                             client.professionalInfo?.jobTitle
                                         }
+                                        type="text"
                                         onChange={handleChange}
                                         placeholder="Cargo na empresa"
                                     />
@@ -311,6 +302,7 @@ export default function NewClientDialog({
                                     <Input
                                         id="address"
                                         name="details.address"
+                                        type="text"
                                         value={client.details?.address}
                                         onChange={handleChange}
                                         placeholder="Endereço completo"
@@ -327,6 +319,7 @@ export default function NewClientDialog({
                                     <Input
                                         id="city"
                                         name="details.city"
+                                        type="text"
                                         value={client.details?.city}
                                         onChange={handleChange}
                                         placeholder="Cidade"
@@ -343,6 +336,7 @@ export default function NewClientDialog({
                                     <Input
                                         id="cep"
                                         name="details.zipCode"
+                                        type="text"
                                         value={client.details?.zipCode}
                                         onChange={handleChange}
                                         placeholder="Código postal"
@@ -360,10 +354,7 @@ export default function NewClientDialog({
                                         <select
                                             id="leadSource"
                                             name="professionalInfo.leadSource"
-                                            value={
-                                                client.professionalInfo
-                                                    ?.leadSource
-                                            }
+                                            value={client.details?.leadSource}
                                             onChange={handleChange}
                                             className="w-full appearance-none rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-neutral-300 focus:ring-2 focus:ring-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:focus:border-neutral-700 dark:focus:ring-neutral-800/50"
                                         >
